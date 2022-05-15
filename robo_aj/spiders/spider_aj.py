@@ -29,7 +29,7 @@ class SpiderAj2Spider(scrapy.Spider):
             
         post = {
             'author': 'Arnaldo Jabor',
-            'title': response.css('h1::text').get().strip(),   #Use strip para evitar novas lihas no titulo
+            'title': response.css('h1::text').get().strip().encode('utf-8'),   #Use strip para evitar novas lihas no titulo
             'content': content.encode('utf-8')
         }
         
