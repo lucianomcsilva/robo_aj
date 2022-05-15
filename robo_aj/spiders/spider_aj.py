@@ -15,8 +15,7 @@ class SpiderAj2Spider(scrapy.Spider):
         os.remove("artigos_aj.csv")
 
     # função que interpreta o documento que lista os artigos
-    def parse(self, response):       
-    # def parse(self, response, row):
+    def parse(self, response):           
         for link in response.css(".item-ultimas").css("h2").css("a::attr(href)").getall():
             text_page = f"https://www.otempo.com.br/{link}"
             yield scrapy.Request(text_page, callback=self.parse_text)
@@ -24,12 +23,13 @@ class SpiderAj2Spider(scrapy.Spider):
     # função que interpreta os documentos com os textos 
     def parse_text(self, response):
         content = ""   
-        for line in response.css('div.texto-artigo p::text').getall() :
-            content = content + "".join(line) + "\n"
+        #Atualizando para novo leiaute do site o tempo
+        for line in response.css('#text-content p::text').getall() :
+            content = content + "".join(line.strip()) + "\n"
             
         post = {
             'author': 'Arnaldo Jabor',
-            'title': response.css('h1::text').get(),
+            'title': response.css('h1::text').get().strip(),   #Use strip para evitar novas lihas no titulo
             'content': content.encode('utf-8')
         }
         
